@@ -92,14 +92,21 @@ build_ssl_1_1() {
     log_file=$3
 
     echo "Building..."
-    make -j$(nproc) SHLIB_VERSION_NUMBER= SHLIB_EXT=_1_1.so build_libs 2>&1 1>>${log_file} | tee -a ${log_file} || exit 1
-    llvm-strip --strip-all libcrypto_1_1.so
-    llvm-strip --strip-all libssl_1_1.so
-    cp libcrypto_1_1.so libssl_1_1.so "../$version_out_dir/$qt_arch" || exit 1
+    make -j$(nproc) SHLIB_VERSION_NUMBER= SHLIB_EXT=_${qt_arch}_1_1.so build_libs 2>&1 1>>${log_file} | tee -a ${log_file} || exit 1
+    llvm-strip --strip-all libcrypto_${qt_arch}_1_1.so
+    llvm-strip --strip-all libssl_${qt_arch}_1_1.so
+    cp libcrypto_${qt_arch}_1_1.so libssl_${qt_arch}_1_1.so "../$version_out_dir/$qt_arch" || exit 1
     cp libcrypto.a libssl.a "../$version_out_dir/$qt_arch" || exit 1
-    ln -s "../$version_out_dir/$qt_arch/libcrypto_1_1.so" "../$version_out_dir/$qt_arch/libcrypto.so"
-    ln -s "../$version_out_dir/$qt_arch/libssl_1_1.so" "../$version_out_dir/$qt_arch/libssl.so"
-    ln -s "../$version_out_dir/include" "../$version_out_dir/$qt_arch/include"
+    ln -s "libcrypto_${qt_arch}_1_1.so" "../$version_out_dir/$qt_arch/libcrypto.so" || exit 1
+    ln -s "libcrypto_${qt_arch}_1_1.so" "../$version_out_dir/$qt_arch/libcrypto_1_1.so" || exit 1
+    ln -s "libssl_${qt_arch}_1_1.so" "../$version_out_dir/$qt_arch/libssl.so" || exit 1
+    ln -s "libssl_${qt_arch}_1_1.so" "../$version_out_dir/$qt_arch/libssl_1_1.so" || exit 1
+    ln -s "../include" "../$version_out_dir/$qt_arch/include" || exit 1
+    mkdir -p "../$version_out_dir/lib" || exit 1
+    ln -s "../${qt_arch}/libssl_${qt_arch}_1_1.so" "../$version_out_dir/lib/libssl_${qt_arch}.so" || exit 1
+    ln -s "../${qt_arch}/libssl_${qt_arch}_1_1.so" "../$version_out_dir/lib/libssl_${qt_arch}_1_1.so" || exit 1
+    ln -s "../${qt_arch}/libcrypto_${qt_arch}_1_1.so" "../$version_out_dir/lib/libcrypto_${qt_arch}.so" || exit 1
+    ln -s "../${qt_arch}/libcrypto_${qt_arch}_1_1.so" "../$version_out_dir/lib/libcrypto_${qt_arch}_1_1.so" || exit 1
 }
 
 build_ssl_3() {
