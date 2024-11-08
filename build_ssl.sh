@@ -19,7 +19,7 @@ declare -A ssl_versions_output_dir=(
 )
 declare -A ssl_versions_ndk=(
     ["1.1.1u"]="$HOME/android/ndk/21.4.7075529"
-    ["3.1.1"]="$HOME/android/ndk/25.2.9519653"
+    #["3.1.1"]="$HOME/android/ndk/25.2.9519653"
 )
 declare -A architectures=(
     ["x86_64"]="x86_64"
