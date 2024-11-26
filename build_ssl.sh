@@ -158,10 +158,6 @@ for param in "${params[@]}"; do
                 ndk="${ssl_versions_ndk[$ssl_version]}"
                 configure_ssl "${ndk}" "${param}" ${ssl_version} ${version_out_dir} ${arch} ${log_file}
 
-                if [ "$arch" == "arm64" ] && [ ! -d "../$version_out_dir/include/openssl" ]; then
-                    cp -a include "../$version_out_dir" || exit 1
-                fi
-
                 case $version_out_dir in
                     ssl_1.1)
                         build_ssl_1_1 ${version_out_dir} ${qt_arch} ${log_file}
@@ -175,6 +171,9 @@ for param in "${params[@]}"; do
                         ;;
                 esac
 
+                if [ "$arch" == "arm64" ] && [ ! -d "../$version_out_dir/include/openssl" ]; then
+                    cp -a include "../$version_out_dir" || exit 1
+                fi
                 
                 popd
             done
